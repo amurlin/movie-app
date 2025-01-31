@@ -20,7 +20,7 @@ import { useTheme } from "next-themes";
 const Header = () => {
   const { setTheme, theme } = useTheme();
   return (
-    <div className='fixed top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[4%] ----  border-solid border-[1px] border-gray-300 '>
+    <div className='top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[4%] ----  border-solid border-[1px] border-gray-300 '>
         <div className="flex flex-row text-[#4338CA] gap-2 ">
             <Film />
             <h4 className='italic font-bold' >Movie Z</h4>

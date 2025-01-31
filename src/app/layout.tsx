@@ -1,5 +1,5 @@
 import Footer from "@/components/footer/Footer";
-import Header from "@/components/ui/header/Header";
+import Header from "@/components/header/Header";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -16,18 +16,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <body>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
       >
-        <body>
           <Header />
           {children}
           <Footer />
-        </body>
+        
       </ThemeProvider>
+      </body>
     </html>
   );
 }
