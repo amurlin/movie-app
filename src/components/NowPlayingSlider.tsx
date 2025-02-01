@@ -22,7 +22,9 @@ const NowPlayingSlider = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [nowPlayingData, setNowPlayingData] = useState<MovieType[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { push } = useRouter();
+  const totalSlides = nowPlayingData.length;
 
   const getNowPlayingMoviesData = async () => {
     setLoading(true);
@@ -36,6 +38,7 @@ const NowPlayingSlider = () => {
           },
         }
       );
+      
       setNowPlayingData(response.data.results);
       setLoading(false);
     } catch (err: unknown) {
@@ -51,27 +54,40 @@ const NowPlayingSlider = () => {
     getNowPlayingMoviesData();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+    }, 5000); // 5000ms буюу 5 секунд тутам шилжих
+    // Тогтмол шилжүүлгийг зогсоох
+    return () => clearInterval(interval);
+  }, [totalSlides]); // totalSlides өөрчлөгдсөн үед шинэ интервал үүсгэгдэнэ
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  console.log('TMDB Base URL:', TMDB_BASE_URL);
-console.log('TMDB API Token:', TMDB_API_TOKEN);
+
+
+//   console.log('TMDB Base URL:', TMDB_BASE_URL);
+// console.log('TMDB API Token:', TMDB_API_TOKEN);
+
+
 
 
 
   return (
-    <Carousel className="w-[100vw] max-w-lg">
-      <CarouselContent>
+    <Carousel className="w-[100vw] max-screen m-0" >
+      <CarouselContent className="">
         {nowPlayingData.map((movie) => (
-          <CarouselItem key={movie.id} onClick={() => push(`/detail/${movie.id}`)}>
-            <div className="p-1">
+          <CarouselItem key={movie.id} onClick={() => push(`/detail/${movie.id}`)} className="">
+            <div className="">
               <Card className="cursor-pointer">
-                <CardContent className="flex flex-col items-center justify-center p-4">
+                <CardContent className="flex flex-col items-center justify-center p-0">
                   <Image
                     src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.backdrop_path}`}
                     alt={movie.title}
                     className="w-full"
                     width={500} height={200}
+                    priority
                   />
                   <CardHeader className="text-center font-semibold">{movie.title}</CardHeader>
                   <p className="text-sm">⭐ {movie.vote_average}</p>

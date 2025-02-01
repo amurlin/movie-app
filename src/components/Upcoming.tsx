@@ -61,14 +61,14 @@ const Upcoming = () => {
 
   return (
     <div> 
-    <h3>Upcoming</h3>
+      <h3>Upcoming</h3>
       <div className="flex flex-wrap gap-[32px] items-center">
           {nowPlayingData.map((movie, index) => {
               return (
                 <div key={index} className="px-0">
                   <Card key={index} onClick={() => push(`/detail/5${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
                     <CardContent className="p-0">
-                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} />
+                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} priority />
                     </CardContent>
                     <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
                     <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
