@@ -6,7 +6,7 @@ import Upcoming from "@/components/Upcoming";
 export default function Home() {
   
   return (
-    <div >
+    <div className="flex flex-col sm:gap-16">
       <NowPlayingSlider />
       <Upcoming />
     </div>

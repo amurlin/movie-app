@@ -13,6 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
+import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -22,7 +23,7 @@ const NowPlayingSlider = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [nowPlayingData, setNowPlayingData] = useState<MovieType[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
   const { push } = useRouter();
   const totalSlides = nowPlayingData.length;
 
@@ -54,13 +55,13 @@ const NowPlayingSlider = () => {
     getNowPlayingMoviesData();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-    }, 5000); // 5000ms буюу 5 секунд тутам шилжих
-    // Тогтмол шилжүүлгийг зогсоох
-    return () => clearInterval(interval);
-  }, [totalSlides]); // totalSlides өөрчлөгдсөн үед шинэ интервал үүсгэгдэнэ
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  //   }, 5000); // 5000ms буюу 5 секунд тутам шилжих
+  //   // Тогтмол шилжүүлгийг зогсоох
+  //   return () => clearInterval(interval);
+  // }, [totalSlides]); // totalSlides өөрчлөгдсөн үед шинэ интервал үүсгэгдэнэ
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -75,32 +76,57 @@ const NowPlayingSlider = () => {
 
 
   return (
-    <Carousel className="w-[100vw] max-screen m-0" >
+    <Carousel className="w-[100vw] max-screen m-0 relative" >
       <CarouselContent className="">
         {nowPlayingData.map((movie) => (
           <CarouselItem key={movie.id} onClick={() => push(`/detail/${movie.id}`)} className="">
             <div className="">
               <Card className="cursor-pointer">
-                <CardContent className="flex flex-col items-center justify-center p-0">
+                <CardContent className="flex flex-col justify-center p-0 gap-4">
                   <Image
                     src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.backdrop_path}`}
                     alt={movie.title}
-                    className="w-full"
+                    className="w-full object-cover box-border relative"
                     width={500} height={200}
+                    quality={90}
                     priority
                   />
-                  <CardHeader className="text-center font-semibold">{movie.title}</CardHeader>
-                  <p className="text-sm">⭐ {movie.vote_average}</p>
+                  <div className="absolute hidden sm:flex flex-col gap-1 w-[300px] items-start text-white ">
+                    <p className="p-0 text-sm">Now playing:</p>
+                    <CardHeader className="text-center text-2xl font-semibold p-0">{movie.title}</CardHeader>
+                    <div className="flex flex-row items-center">
+                      <p className="text-2xl p-0">⭐</p>
+                      <p className="text-md p-0">{movie.vote_average}</p>
+                      <p className="text-xs text-gray-400">/10</p>
+                    </div>
+                    <p className="h-[120px] overflow-hidden text-sm">{movie.overview}</p>
+                  </div>
+                  <div className="flex sm:hidden flex-row justify-between items-start gap-1 px-[5%]">
+                    <div className="flex flex-col items-start w-[300px]">
+                      <h3 className="p-0 text-md">Now playing:</h3>
+                      <CardHeader className="text-center font-semibold text-2xl p-0 mb-3">{movie.title}</CardHeader>
+                      <p className="h-[120px] overflow-hidden text-sm">{movie.overview}</p>
+                    </div>
+                    <div className="flex flex-row items-center">
+                      <p className="text-2xl p-0">⭐</p>
+                      <p className="text-md p-0">{movie.vote_average}</p>
+                      <p className="text-xs text-gray-400">/10</p>
+                    </div>
+                  </div>
                 </CardContent>
+                
               </Card>
             </div>
           </CarouselItem>
         ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      </CarouselContent >
+      <CarouselPrevious className="absolute left-4 top-1/2 w-12 h-12 bg-black/50 text-white rounded-full sm:flex hidden items-center justify-center hover:bg-black/70 transition z-10" />
+      <CarouselNext className="absolute right-4 top-1/2  w-12 h-12 bg-black/50 text-white rounded-full sm:flex hidden items-center justify-center hover:bg-black/70 transition z-10 " />
+    </Carousel >
   );
 };
 
 export default NowPlayingSlider;
+
+
+// Avtomataar guideg bolgoh!

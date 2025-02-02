@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { MovieType } from "@/app/types/movie-type";
+import { ArrowRightIcon } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -60,12 +61,15 @@ const Upcoming = () => {
   console.log(nowPlayingData);
 
   return (
-    <div> 
-      <h3>Upcoming</h3>
-      <div className="flex flex-wrap gap-[32px] items-center">
+    <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 "> 
+      <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
+        <p className="text-2xl font-bold">Upcoming</p>
+        <p className="flex flex-row gap-2">See more <ArrowRightIcon className="w-5"/> </p>
+      </div>
+      <div className="w-full flex flex-wrap gap-[32px] justify-center ">
           {nowPlayingData.map((movie, index) => {
               return (
-                <div key={index} className="px-0">
+                <div key={index} className="px-0 gap-[32px]">
                   <Card key={index} onClick={() => push(`/detail/5${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
                     <CardContent className="p-0">
                       <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} priority />
