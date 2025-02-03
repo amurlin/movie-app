@@ -64,7 +64,7 @@ const Upcoming = () => {
     <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden "> 
       <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
         <p className="text-2xl font-bold">Upcoming</p>
-        <p className="flex flex-row gap-2" onClick={() => push(`/detail/5${movie.id}`)} >See more <ArrowRightIcon className="w-5"/> </p>
+        <p className="flex flex-row gap-2" >See more <ArrowRightIcon className="w-5"/> </p>
       </div>
       <div className="w-full flex flex-wrap gap-[32px] justify-center ">
           {nowPlayingData.map((movie, index) => {

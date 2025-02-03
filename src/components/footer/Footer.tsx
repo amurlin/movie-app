@@ -3,13 +3,13 @@ import { Film, Mail, Phone} from 'lucide-react';
 
 const Footer = () => {
   return (
-    <div className='w-full h-[228px] px-[20px] py-[40px] bg-[#4338CA]  '>
+    <div className='w-full h-full px-[20px] py-[40px] bg-[#4338CA]  '>
       <div className='flex flex-row'>
         <Film />
         <h4 className='italic font-bold' >Movie Z</h4>
       </div>
       <h5>© 2024 Movie Z. All Rights Reserved.</h5>
-      <div className='flex flex-row gap-[5%]'>
+      <div className='flex flex-row justify-between'>
         <div className=''>
           <h5>Contact Information</h5>
           <div className='flex flex-row items-center gap-2'>
