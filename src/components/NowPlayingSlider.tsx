@@ -141,3 +141,4 @@ const NowPlayingSlider = () => {
 export default NowPlayingSlider;
 
 // Avtomataar guideg bolgoh!
+// carousel deer auto gek baidag 

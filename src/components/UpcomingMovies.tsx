@@ -70,7 +70,7 @@ const UpcomingMovies = () => {
           {nowPlayingData.map((movie, index) => {
               return (
                 <div key={index} className="px-0 gap-[32px]">
-                  <Card key={index} onClick={() => push(`/detail/5${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
+                  <Card key={index} onClick={() => push(`/detail/${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
                     <CardContent className="p-0">
                       <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} priority />
                     </CardContent>
