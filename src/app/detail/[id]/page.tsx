@@ -40,7 +40,7 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState<MovieType | null>(null); 
   const [error, setError] = useState<string>(""); // error-ийн төрөл нь string
   const [loading, setLoading] = useState<boolean>(false); // loading-ийн төрөл нь boolean
-  //const [trailer, setTrailer] = useState<string | null>(null); // трейлерийн key хадгалах хувьсагч
+  const [trailer, setTrailer] = useState<string | null>(null); // трейлерийн key хадгалах хувьсагч
   const [movieCredits, setMovieCredits] = useState<CreditsType[]>([]);
   const [similarMovies, setSimilarMovies] = useState<MovieType[]>([])
 
@@ -61,21 +61,21 @@ const MovieDetail = () => {
         console.log("response data :",response.data)
 
         
-        // // Трейлерийн мэдээллийг авах
-        // const videoResponse = await axios.get(
-        //   `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
-        //   {
-        //     headers: {
-        //       Accept: "application/json",
-        //       Authorization: `Bearer ${TMDB_API_TOKEN}`,
-        //     },
-        //   }
-        // );
-        // // Трейлерийг тогтоох
-        // const trailerData = videoResponse.data.results.find((video: any) => video.type === "Trailer");
-        // if (trailerData) {
-        //   setTrailer(trailerData.key);
-        // }
+        // Трейлерийн мэдээллийг авах
+        const videoResponse = await axios.get(
+          `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${TMDB_API_TOKEN}`,
+            },
+          }
+        );
+        // Трейлерийг тогтоох
+        const trailerData = videoResponse.data.results.find((video: any) => video.type === "Trailer");
+        if (trailerData) {
+          setTrailer(trailerData.key);
+        }
 
         const creditsResponse = await axios.get(
           `${TMDB_BASE_URL}/movie/${id}/credits?language=en-US`,
@@ -141,28 +141,26 @@ const MovieDetail = () => {
             height={430}
             priority
           />
-          <Image 
+          {/* <Image 
             src={`${TMDB_IMAGE_SERVICE_URL}/original${movie.backdrop_path}`}
             alt={movie.title}
             width={760}
-            height={430}/>
-          {/* Трейлерийн хэсэг
-      //       {trailer ? (
-      //         <div className="mt-6">
-      //           <h3 className="text-2xl font-semibold">Трейлер</h3>
-      //           <iframe
-      //             width={760}
-                     height={430}
-      //             src={`https://www.youtube.com/embed/${trailer}`}
-      //             title="Movie Trailer"
-      //             frameBorder="0"
-      //             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      //             allowFullScreen
-      //           ></iframe>
-      //         </div>
-      //       ) : (
-      //         <p>Трейлер байхгүй.</p>
-      //       )} */}
+            height={430}/> */}
+    
+            {trailer ? (
+              <div className="">
+                <iframe
+                  width={760}
+                  height={430}
+                  src={`https://www.youtube.com/embed/${trailer}`}
+                  title="Movie Trailer"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            ) : (
+              <p>Трейлер байхгүй.</p>
+            )}
         </div>
         <p>{movie.overview}</p>
         <p> bna uu</p>

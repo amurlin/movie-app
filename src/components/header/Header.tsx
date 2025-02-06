@@ -32,7 +32,7 @@ const Header = () => {
                 <SelectValue placeholder="Genre" />
               </SelectTrigger>
               <SelectContent>
-                <SelectGroup>
+                <SelectGroup className=''>
                   <SelectLabel>Genres</SelectLabel>
                   <SelectItem value="action">Action</SelectItem>
                   <SelectItem value="adventure">Adventure</SelectItem>
