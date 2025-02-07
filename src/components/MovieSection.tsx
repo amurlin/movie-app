@@ -1,20 +1,18 @@
 "use client";
 
 import axios from "axios";
-import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { ArrowRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MovieType } from "@/app/types/movie-type";
-import { ArrowRightIcon } from "lucide-react";
+import MovieCard from "./MovieCard"; // Шинэ MovieCard компонентыг импортолж байна
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
-const TMDB_IMAGE_SERVICE_URL = process.env.TMDB_IMAGE_SERVICE_URL;
 
 interface MovieSectionProps {
   title: string;
-  endpoint: string; // TMDB API-н endpoint (e.g., "upcoming", "popular")
+  endpoint: string;
 }
 
 const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
@@ -63,18 +61,10 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
         >
           See more <ArrowRightIcon className="w-5" />
         </p>
-
-
       </div>
       <div className="w-full flex flex-wrap gap-[32px] justify-center">
         {movies.map((movie) => (
-          <Card key={movie.id} onClick={() => push(`/detail/${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden">
-            <CardContent className="p-0">
-              <Image src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt={movie.title} width={230} height={340} priority />
-            </CardContent>
-            <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
-            <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
-          </Card>
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
     </div>
@@ -82,3 +72,4 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
 };
 
 export default MovieSection;
+

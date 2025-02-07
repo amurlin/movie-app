@@ -3,112 +3,106 @@
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Badge } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MovieType } from "../types/movie-type";
+import MovieCard from "@/components/MovieCard"; // MovieCard-ыг импортлож байна
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
-//const TMDB_IMAGE_SERVICE_URL = process.env.TMDB_IMAGE_SERVICE_URL;
 
-type GentesType = { id: number; name: string};
-
+type GenresType = { id: number; name: string };
 
 const Page = () => {
-const { push } = useRouter();
-const searchParams = useSearchParams();
-const [genres, setGenres] = useState<GentesType[]>([]);
-const [ movie, setMovie] = useState<MovieType[]>([]);
-const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
-const searchedGenreIds = searchParams.get("genreIds")
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const [genres, setGenres] = useState<GenresType[]>([]);
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
+  const searchedGenreIds = searchParams.get("genreIds") || "";
 
-const getGenresList = async () => {
-    await axios 
-        .get(`${TMDB_BASE_URL}/genre/movie/list?language=en`, {
-            headers : {
-                "Content-Type": "application/json",
-                Authorization: `Baerer ${TMDB_API_TOKEN}`,
-            },
-        })
-        .then((response) => {
-            setGenres(response.data.genres);
-        })
-        .catch((error) => {
-            console.log("Axios error:", error);
-        })
-};
+  const getGenresList = async () => {
+    try {
+      const response = await axios.get(`${TMDB_BASE_URL}/genre/movie/list?language=en`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${TMDB_API_TOKEN}`,
+        },
+      });
+      setGenres(response.data.genres);
+    } catch (error) {
+      console.log("Axios error:", error);
+    }
+  };
 
-const getMoviesByGenres = async () => {
-    await axios 
-        .get(`${TMDB_BASE_URL}/discover/movie?language=en&with_genres=${searchedGenreIds}&page=1`, { //${page}
-            headers : {
-                "Content-Type": "application/json",
-                Authorization: `Baerer ${TMDB_API_TOKEN}`,
-            },
-        })
-        .then((response) => {
-            console.log(response);
-            setMovie(response.data.results);
-        })
-        .catch((error) => {
-            console.log("Axios error:", error);
-        })
-};
+  const getMoviesByGenres = async () => {
+    try {
+      const response = await axios.get(
+        `${TMDB_BASE_URL}/discover/movie?language=en&with_genres=${searchedGenreIds}&page=1`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TMDB_API_TOKEN}`,
+          },
+        }
+      );
+      setMovies(response.data.results);
+    } catch (error) {
+      console.log("Axios error:", error);
+    }
+  };
 
-useEffect(() => {
-    getGenresList()
-}, []);
+  useEffect(() => {
+    getGenresList();
+  }, []);
 
-useEffect(() => {
-    getMoviesByGenres()
-}, [searchedGenreIds]);
+  useEffect(() => {
+    getMoviesByGenres();
+  }, [searchedGenreIds]);
 
-const handleGenreSelection = (genreId: string) => () => {
-    const updatedGenres = selectedGenreIds.includes(genreId) 
-    ? selectedGenreIds.filter((item) => item !== genreId)
-    : [...selectedGenreIds, genreId];
+  const handleGenreSelection = (genreId: string) => () => {
+    const updatedGenres = selectedGenreIds.includes(genreId)
+      ? selectedGenreIds.filter((item) => item !== genreId)
+      : [...selectedGenreIds, genreId];
 
     setSelectedGenreIds(updatedGenres);
 
     const queryParams = new URLSearchParams();
-    queryParams.set("genresId", updatedGenres.join(","));
-    const newPath = queryParams.toString();
-
-    push(`/genres?${newPath}`);
-};
+    queryParams.set("genreIds", updatedGenres.join(","));
+    push(`/genres?${queryParams.toString()}`);
+  };
 
   return (
-    <div className="">
-        <div>
-            {genres.length > 0 &&
-               genres?.map((item) => {
-                const genreId = item.id.toString();
-                const isSelected = selectedGenreIds.includes(genreId);
-                return (
-                    <Badge 
-                    onClick={handleGenreSelection(genreId)}
-                    variant="outline"
-                    key={item.name}
-                    className={`${
-                        isSelected 
-                        ? "bg-black text-white dark:bg-white dark:text-black" 
-                        : ""
-                    } rounded-full cursor-pointer`}>
-                        {item.name}
-                    </Badge>
-                );
-             })}
-        </div>
-        <Separator orientation="vertical"/>
-        <div className="col-span-2">
-            {movie?.length > 0 && 
-                movie.map((item) => {
-                    return <div key={item.original_title}> {item.original_title} </div>
-                })}
-        </div>
+    <div className="px-6 py-4">
+      <div className="flex flex-wrap gap-2">
+        {genres.length > 0 &&
+          genres.map((item) => {
+            const genreId = item.id.toString();
+            const isSelected = selectedGenreIds.includes(genreId);
+            return (
+              <Badge
+                onClick={handleGenreSelection(genreId)}
+                variant="outline"
+                key={item.id}
+                className={`cursor-pointer px-3 py-1 rounded-full ${
+                  isSelected ? "bg-black text-white dark:bg-white dark:text-black" : ""
+                }`}
+              >
+                {item.name}
+              </Badge>
+            );
+          })}
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {movies.length > 0
+          ? movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          : <p className="text-gray-500">No movies found</p>}
+      </div>
     </div>
   );
 };
 
-export default Page
+export default Page;

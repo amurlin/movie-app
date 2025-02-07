@@ -1,35 +1,11 @@
-// "use client";
-
-// import { useParams } from "next/navigation";
-
-// const Page = () => {
-  
-//   const params = useParams();
-//   console.log(params.id);
-  
-  
-//   return (
-//     <div>{params.id}</div>
-//   )
-// }
-
-// export default Page;
-
-// /pages/detail/[id].tsx
-
-// /pages/detail/[id].tsx
-
-
 "use client";
 
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { MovieType } from "@/app/types/movie-type"; // MovieType-ийг импортоор авна
+import { MovieType } from "@/app/types/movie-type"; 
 import { CreditsType } from "@/app/types/credits-type";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import MovieSection from "@/components/MovieSection";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -40,9 +16,8 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState<MovieType | null>(null); 
   const [error, setError] = useState<string>(""); // error-ийн төрөл нь string
   const [loading, setLoading] = useState<boolean>(false); // loading-ийн төрөл нь boolean
-  const [trailer, setTrailer] = useState<string | null>(null); // трейлерийн key хадгалах хувьсагч
+  const [trailer, setTrailer] = useState<string | null>(null); 
   const [movieCredits, setMovieCredits] = useState<CreditsType[]>([]);
-  const [similarMovies, setSimilarMovies] = useState<MovieType[]>([])
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -86,20 +61,6 @@ const MovieDetail = () => {
             },
           }
         );
-        setMovieCredits(creditsResponse.data);
-        console.log("credits data :", creditsResponse.data);
-
-        const similarMoviesResponse = await axios.get(
-          `${TMDB_BASE_URL}/movie/${id}/similar?language=en-US&page=1`,
-          {
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${TMDB_API_TOKEN}`,
-            },
-          }
-        );
-        setSimilarMovies(similarMoviesResponse.data);
-        console.log("similar movies data :", similarMoviesResponse.data);
 
         setLoading(false);
       } catch (err: unknown) {
@@ -119,8 +80,6 @@ const MovieDetail = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   if (!movie) return <p>Кино олдсонгүй.</p>;
-  if (!movieCredits) return<p>Not founding</p>
-  if (!similarMovies) return<p>Not founding</p>
 
 
   return (
@@ -159,13 +118,10 @@ const MovieDetail = () => {
                 ></iframe>
               </div>
             ) : (
-              <p>Трейлер байхгүй.</p>
+              <p>Trailer Not Found</p>
             )}
         </div>
         <p>{movie.overview}</p>
-        <p> bna uu</p>
-        
-        <MovieSection title="Similar" endpoint="similar"/>
       </div>
         
     </div>
