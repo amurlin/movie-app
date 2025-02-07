@@ -73,8 +73,8 @@ const Page = () => {
   };
 
   return (
-    <div className="px-6 py-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="px-6 py-4 ">
+      <div className="flex flex-wrap gap-2 ">
         {genres.length > 0 &&
           genres.map((item) => {
             const genreId = item.id.toString();

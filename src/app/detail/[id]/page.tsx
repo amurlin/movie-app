@@ -5,7 +5,6 @@ import axios from "axios";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { MovieType } from "@/app/types/movie-type"; 
-import { CreditsType } from "@/app/types/credits-type";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -17,7 +16,6 @@ const MovieDetail = () => {
   const [error, setError] = useState<string>(""); // error-ийн төрөл нь string
   const [loading, setLoading] = useState<boolean>(false); // loading-ийн төрөл нь boolean
   const [trailer, setTrailer] = useState<string | null>(null); 
-  const [movieCredits, setMovieCredits] = useState<CreditsType[]>([]);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -51,16 +49,6 @@ const MovieDetail = () => {
         if (trailerData) {
           setTrailer(trailerData.key);
         }
-
-        const creditsResponse = await axios.get(
-          `${TMDB_BASE_URL}/movie/${id}/credits?language=en-US`,
-          {
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${TMDB_API_TOKEN}`,
-            },
-          }
-        );
 
         setLoading(false);
       } catch (err: unknown) {

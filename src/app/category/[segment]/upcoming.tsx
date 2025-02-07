@@ -24,7 +24,7 @@ const Upcoming = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${TMDB_BASE_URL}${endpoint}`,
+        `${TMDB_BASE_URL}/movie/upcoming?language=en-US&page=1`,
         {
           headers: {
             Accept: "application/json",
@@ -59,50 +59,27 @@ const Upcoming = () => {
 
   console.log(nowPlayingData);
 
-
   return (
-    <div className="flex justify-center">
-          <div className="flex flex-col w-[1080px]">
-            <div className="flex justify-between">
-              <div className="flex flex-col">
-                <h1 className="text-4xl font-bold">{movie.title}</h1>
-                <p className="mt-2">{movie.release_date}</p>
-              </div>
-              <p className="mt-4">⭐ Rating {movie.vote_average}</p>
-            </div>
-            <div className="flex flex-row justify-between">
-            <Image
-                src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`}
-                alt={movie.title}
-                width={290}
-                height={430}
-                priority
-              />
-              {/* <Image 
-                src={`${TMDB_IMAGE_SERVICE_URL}/original${movie.backdrop_path}`}
-                alt={movie.title}
-                width={760}
-                height={430}/> */}
-        
-                {trailer ? (
-                  <div className="">
-                    <iframe
-                      width={760}
-                      height={430}
-                      src={`https://www.youtube.com/embed/${trailer}`}
-                      title="Movie Trailer"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                ) : (
-                  <p>Trailer Not Found</p>
-                )}
-            </div>
-            <p>{movie.overview}</p>
-          </div>
-            
-        </div>
+    <div> 
+    <h3>Upcoming</h3>
+      <h3>Upcoming</h3>
+      <div className="flex flex-wrap gap-[32px] items-center">
+          {nowPlayingData.map((movie, index) => {
+              return (
+                <div key={index} className="px-0">
+                  <Card key={index} onClick={() => push(`/detail/5${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
+                    <CardContent className="p-0">
+                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} />
+                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} priority />
+                    </CardContent>
+                    <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
+                    <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
+                  </Card>
+                </div>
+              );
+          })}
+      </div>
+    </div>
   );
 };
 
