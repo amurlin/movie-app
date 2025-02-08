@@ -72,15 +72,15 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
-        <p className="text-2xl font-bold">{title}</p>
-        <p 
-          className="flex flex-row gap-2 cursor-pointer"
-          onClick={() => push(`/category/${endpoint}`)}
-        >
-          See more <ArrowRightIcon className="w-5" />
-        </p>
+    // <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
+    //   <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
+    //     <p className="text-2xl font-bold">{title}</p>
+    //     <p 
+    //       className="flex flex-row gap-2 cursor-pointer"
+    //       onClick={() => push(`/category/${endpoint}`)}
+    //     >
+    //       See more <ArrowRightIcon className="w-5" />
+    //     </p>
 
 
       </div>
@@ -100,6 +100,9 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
 };
 
 export default MovieSection;
+
+
+// push hhih hergtei bsin
 
 
 
