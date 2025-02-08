@@ -17,6 +17,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { MovieType } from "@/app/types/movie-type";
+import Image from "next/image";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -30,7 +31,7 @@ const Header = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [movies, setMovies] = useState<MovieType[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -69,7 +70,7 @@ const Header = () => {
         return;
       }
 
-      setLoading(true);
+      //setLoading(true);
       try {
         const response = await axios.get(
           `${TMDB_BASE_URL}/search/movie?query=${searchValue}&language=en-US&page=1`,
@@ -84,18 +85,18 @@ const Header = () => {
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
-      setLoading(false);
+      //setLoading(false);
     };
 
     fetchMovies();
   }, [searchValue]);
 
-  const handleMovieClick = (movieId: number) => {
-    push(`/movie/${movieId}`);
-  };
+  // const handleMovieClick = (movieId: number) => {
+  //   push(`/movie/${movieId}`);
+  // };
 
   return (
-    <div className="sticky top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[5%] sm:px-[12%] z-10 bg-white dark:bg-black border-solid border-[1px] border-gray-300">
+    <div className="sticky top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[5%] sm:px-[12%] z-10 bg-white dark:bg-black ">
       <div className="flex flex-row text-[#4338CA] gap-2">
         <Film />
         <h4 className="italic font-bold">Movie Z</h4>
@@ -138,20 +139,22 @@ const Header = () => {
         )}
       </div>
 
-      {/* Хайлтын үр дүн */}
-      {loading && <p>Loading search results...</p>}
+      {/* search */}
+      {/* {loading && <p>Loading ...</p>} */}
       {movies.length > 0 && (
-        <div className="absolute top-[60px] left-[5%] right-[5%] bg-white dark:bg-black shadow-lg max-h-[300px] overflow-auto mt-2 rounded-lg">
+        <div className="absolute top-[60px] left-[5%] right-[5%] bg-white dark:bg-black shadow-lg max-h-[500px]   mt-2 rounded-lg">
           <div className="flex flex-col">
-            {movies.slice(0, 5).map((movie: any) => ( // Эхний 5 кино
+            {movies.slice(0, 5).map((movie: any) => ( // ehnii 5
               <div
                 key={movie.id}
                 className="flex items-center gap-4 p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => push(`/detail/${movie.id}`)} 
               >
-                <img
+                <Image
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
+                  width={67}
+                  height={100}
                   className="w-[50px] h-[75px] object-cover rounded-md"
                 />
                 <div className="flex flex-col">

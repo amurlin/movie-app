@@ -24,7 +24,7 @@ const Upcoming = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${TMDB_BASE_URL}${endpoint}`,
+        `${TMDB_BASE_URL}/movie/upcoming?language=en-US&page=1`,
         {
           headers: {
             Accept: "application/json",
@@ -59,37 +59,28 @@ const Upcoming = () => {
 
   console.log(nowPlayingData);
 
-
   return (
-    <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
-        <p className="text-2xl font-bold">{title}</p>
-        <p 
-          className="flex flex-row gap-2 cursor-pointer"
-          onClick={() => push(`/category/${endpoint}`)}
-        >
-          See more <ArrowRightIcon className="w-5" />
-        </p>
-
-
-      </div>
-      <div className="w-full flex flex-wrap gap-[32px] justify-center">
-        {movies.map((movie) => (
-          <Card key={movie.id} onClick={() => push(`/detail/${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden">
-            <CardContent className="p-0">
-              <Image src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt={movie.title} width={230} height={340} priority />
-            </CardContent>
-            <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
-            <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
-          </Card>
-        ))}
+    <div> 
+    <h3>Upcoming</h3>
+      <h3>Upcoming</h3>
+      <div className="flex flex-wrap gap-[32px] items-center">
+          {nowPlayingData.map((movie, index) => {
+              return (
+                <div key={index} className="px-0">
+                  <Card key={index} onClick={() => push(`/detail/5${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden" >
+                    <CardContent className="p-0">
+                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} />
+                      <Image  src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt="movie image" width={230} height={340} priority />
+                    </CardContent>
+                    <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
+                    <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
+                  </Card>
+                </div>
+              );
+          })}
       </div>
     </div>
   );
 };
 
-export default MovieSection;
-
-
-
-
+export default Upcoming;

@@ -10,12 +10,12 @@ import MovieCard from "./MovieCard"; // Шинэ MovieCard компоненты�
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
 
-interface MovieSectionProps {
+interface MoviesListProps {
   title: string;
   endpoint: string;
 }
 
-const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
+const MoviesList: React.FC<MoviesListProps> = ({ title, endpoint }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState<MovieType[]>([]);
@@ -53,7 +53,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
 
   return (
     <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
+      <div className="w-full flex flex-row justify-between items-center px-[1%] sm:px-[32px]">
         <p className="text-2xl font-bold">{title}</p>
         <p 
           className="flex flex-row gap-2 cursor-pointer"
@@ -71,5 +71,5 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, endpoint }) => {
   );
 };
 
-export default MovieSection;
+export default MoviesList;
 

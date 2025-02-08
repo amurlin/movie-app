@@ -3,7 +3,7 @@ import { Film, Mail, Phone} from 'lucide-react';
 
 const Footer = () => {
   return (
-    <div className='w-full h-full px-[20px] py-[40px] bg-[#4338CA]  '>
+    <div className='w-full h-full px-[20px] py-[40px] bg-[#4338CA] text-white  '>
       <div className='flex flex-row'>
         <Film />
         <h4 className='italic font-bold' >Movie Z</h4>
