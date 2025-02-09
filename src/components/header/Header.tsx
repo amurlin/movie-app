@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { MovieType } from "@/app/types/movie-type";
 import Image from "next/image";
+import { ArrowRightIcon } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -31,6 +32,8 @@ const Header = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [movies, setMovies] = useState<MovieType[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -91,20 +94,43 @@ const Header = () => {
     fetchMovies();
   }, [searchValue]);
 
-  // const handleMovieClick = (movieId: number) => {
-  //   push(`/movie/${movieId}`);
-  // };
+  useEffect(() => {
+    const fetchMovies = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${TMDB_BASE_URL}/movie/${endpoint}?language=en-US&page=1`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${TMDB_API_TOKEN}`,
+            },
+          }
+        );
+        setMovies(response.data.results);
+        setLoading(false);
+      } catch (err: unknown) {
+        let errorMessage = "An unknown error occurred.";
+        if (axios.isAxiosError(err)) {
+          errorMessage = err.response?.data?.status_message || err.message;
+        }
+        setError(errorMessage);
+      }
+    };
+
+    fetchMovies();
+  }, [endpoint]);
+
 
   return (
-    <div className="sticky top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[5%] sm:px-[12%] z-10 bg-white dark:bg-black ">
+    <div className="sticky top-0 w-screen h-[59px] flex flex-row items-center justify-between px-[5%] sm:px-[12%] z-10 bg-white dark:bg-black">
       <div className="flex flex-row text-[#4338CA] gap-2">
         <Film />
         <h4 className="italic font-bold">Movie Z</h4>
       </div>
-      <div className="flex gap-3">
-        <div className="flex gap-3">
+      <div className="lg:flex gap-3 hidden relative">
           <Select onValueChange={handleGenreSelect} value={selectedGenre}>
-            <SelectTrigger className="w-[180px] h-9 sm:flex hidden">
+            <SelectTrigger className="w-[97px] h-9 ">
               <SelectValue placeholder="Genre" />
             </SelectTrigger>
             <SelectContent>
@@ -120,12 +146,13 @@ const Header = () => {
           </Select>
           <Input
             placeholder="Search"
-            className="h-9 sm:flex hidden"
+            className="w-[379px] h-9"
             value={searchValue}
             onChange={handleSearchChange}
           />
         </div>
-        <Button variant="outline" className="w-9 h-9 sm:hidden flex">
+      <div className="flex gap-3">
+        <Button variant="outline" className="w-9 h-9 lg:hidden flex">
           <Search />
         </Button>
         {theme === "dark" ? (
@@ -137,14 +164,14 @@ const Header = () => {
             <Moon />
           </Button>
         )}
-      </div>
+        </div>
 
       {/* search */}
       {/* {loading && <p>Loading ...</p>} */}
       {movies.length > 0 && (
-        <div className="absolute top-[60px] left-[5%] right-[5%] bg-white dark:bg-black shadow-lg max-h-[500px]   mt-2 rounded-lg">
-          <div className="flex flex-col">
-            {movies.slice(0, 5).map((movie: any) => ( // ehnii 5
+        <div className=" absolute w-full flex left-[35%] top-[59px]">
+          <div className=" w-[530px] bg-white dark:bg-black shadow-lg mt-2 rounded-lg flex flex-col">
+          {movies.slice(0, 5).map((movie: any) => ( // ehnii 5
               <div
                 key={movie.id}
                 className="flex items-center gap-4 p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -153,17 +180,32 @@ const Header = () => {
                 <Image
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
-                  width={67}
+                  width={70}
                   height={100}
-                  className="w-[50px] h-[75px] object-cover rounded-md"
+                  className="w-[80px] h-[110px] object-cover rounded-md"
                 />
-                <div className="flex flex-col">
-                  <p className="text-lg">{movie.title}</p>
-                  <p className="text-sm text-gray-500">{movie.release_date?.substring(0, 4)}</p>
+                <div className="flex flex-col justify-between h-[120px]"
+                  onClick={() => push(`/category/${endpoint}`)}>
+                  <div>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-[20px] font-semibold ">{movie.title}</p>
+                    <div className="flex flex-row items-center">
+                      <p className="text-md p-0">⭐</p>
+                      <p className="text-md p-0">{movie.vote_average}</p>
+                      <p className="text-xs text-gray-400">/10</p>
+                    </div>
+                  </div>
+                  <p className="text-md ">{movie.release_date?.substring(0, 4)}</p>
+                  </div>
+                  <p 
+                    className="flex flex-row gap-2 cursor-pointer"
+                  >
+                    See more <ArrowRightIcon className="w-5" />
+                  </p>
                 </div>
               </div>
             ))}
-          </div>
+        </div>
         </div>
       )}
     </div>

@@ -18,18 +18,18 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     <Card 
       key={movie.id} 
       onClick={() => push(`/detail/${movie.id}`)} 
-      className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden cursor-pointer"
+      className="w-[220px] h-[430px] flex flex-col gap-2 overflow-hidden cursor-pointer bg-[#F4F4F5] dark:bg-[#27272A] border-none "
     >
       <CardContent className="p-0">
         <Image 
           src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} 
           alt={movie.title} 
-          width={230} 
+          width={250} 
           height={340} 
           priority 
         />
       </CardContent>
-      <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
+      <CardContent className="px-2 py-0 text-[18px] font-normal">⭐ {movie.vote_average}</CardContent>
       <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
     </Card>
   );

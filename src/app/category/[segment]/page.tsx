@@ -1,94 +1,102 @@
 "use client";
 
-// import { Button } from "@/components/ui/button";
 import axios from "axios";
-import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { MovieType } from "@/app/types/movie-type";
+import MovieCard from "@/components/MovieCard";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
-const TMDB_IMAGE_SERVICE_URL = process.env.TMDB_IMAGE_SERVICE_URL;
 
-console.log(TMDB_API_TOKEN);
-
-const Upcoming = () => {
-  const [error, setError] = useState("");
+const CategoryPage = () => {
+  const { segment } = useParams(); // URL-аас ангиллын нэрийг авах
+  const [movies, setMovies] = useState<MovieType[]>([]);
   const [loading, setLoading] = useState(false);
-  const [nowPlayingData, setNowPlayingData] = useState<MovieType[]>([]);
-  const { push } = useRouter();
-
-  const getNowPlayingMoviesData = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `${TMDB_BASE_URL}${endpoint}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${TMDB_API_TOKEN} `,
-          },
-        }
-      );
-      console.log(response);
-      setNowPlayingData(response.data.results);
-      setLoading(false);
-    } catch (err: unknown) {
-      let errorMessage: string;
-
-      if (axios.isAxiosError(err)) {
-        console.log(err.response?.data?.status_message);
-
-        errorMessage =
-          err.response?.data?.statusMessage ||
-          err.message ||
-          "An unknown Axios error occurred.";
-        setError(errorMessage);
-      }
-    }
-  };
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getNowPlayingMoviesData();
-  }, []);
+    const fetchCategoryMovies = async () => {
+      if (!segment) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${TMDB_BASE_URL}/movie/${segment}?language=en-US&page=1`, // Ангиллын нэрийг динамикаар солих
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${TMDB_API_TOKEN}`,
+            },
+          }
+        );
+        setMovies(response.data.results);
+      } catch (err: unknown) {
+        let errorMessage = "Тодорхойгүй алдаа гарлаа.";
+        if (axios.isAxiosError(err)) {
+          errorMessage = err.response?.data?.status_message || err.message;
+        }
+        setError(errorMessage);
+      }
+      setLoading(false);
+    };
+
+    fetchCategoryMovies();
+  }, [segment]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  console.log(nowPlayingData);
-
-
   return (
-    <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center px-1 sm:px-5">
-        <p className="text-2xl font-bold">{title}</p>
-        <p 
-          className="flex flex-row gap-2 cursor-pointer"
-          onClick={() => push(`/category/${endpoint}`)}
-        >
-          See more <ArrowRightIcon className="w-5" />
-        </p>
-
-
+    <div className="px-[5%] sm:px-[12%] dark:bg-black  flex flex-col gap-8">
+      <h1 className="text-2xl font-bold capitalize">{segment}</h1>
+      <div className="flex flex-wrap gap-[32px] justify-center">
+        {movies.length > 0 ? (
+          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+        ) : (
+          <p>Not found.</p>
+        )}
       </div>
-      <div className="w-full flex flex-wrap gap-[32px] justify-center">
-        {movies.map((movie) => (
-          <Card key={movie.id} onClick={() => push(`/detail/${movie.id}`)} className="w-[230px] h-[439px] flex flex-col gap-3 overflow-hidden">
-            <CardContent className="p-0">
-              <Image src={`${TMDB_IMAGE_SERVICE_URL}/w500${movie.poster_path}`} alt={movie.title} width={230} height={340} priority />
-            </CardContent>
-            <CardContent className="px-2 py-0">⭐ {movie.vote_average}</CardContent>
-            <CardHeader className="px-2 py-0">{movie.title}</CardHeader>
-          </Card>
-        ))}
+      <div className="w-full flex justify-end mb-[32px] sm:mb-[76px]">
+      <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">
+            2
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+      </Pagination>
       </div>
     </div>
   );
 };
 
-export default MovieSection;
+export default CategoryPage;
+
 
 
 

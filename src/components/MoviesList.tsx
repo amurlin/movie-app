@@ -52,8 +52,8 @@ const MoviesList: React.FC<MoviesListProps> = ({ title, endpoint }) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="px-[5%] sm:px-[10%] flex flex-col gap-8 h-[1000px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center px-[1%] sm:px-[32px]">
+    <div className="px-[5%] sm:px-[12%] flex flex-col gap-8 h-[980px] overflow-hidden">
+      <div className="w-full flex flex-row justify-between items-center">
         <p className="text-2xl font-bold">{title}</p>
         <p 
           className="flex flex-row gap-2 cursor-pointer"
@@ -62,11 +62,13 @@ const MoviesList: React.FC<MoviesListProps> = ({ title, endpoint }) => {
           See more <ArrowRightIcon className="w-5" />
         </p>
       </div>
-      <div className="w-full flex flex-wrap gap-[32px] justify-center">
+      <div className="w-full flex flex-wrap gap-x-[32px] gap-y-[32px] justify-start">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
+      
+
     </div>
   );
 };
