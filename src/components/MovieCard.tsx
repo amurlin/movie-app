@@ -18,7 +18,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     <Card 
       key={movie.id} 
       onClick={() => push(`/detail/${movie.id}`)} 
-      className="w-[220px] h-[430px] flex flex-col gap-2 overflow-hidden cursor-pointer bg-[#F4F4F5] dark:bg-[#27272A] border-none "
+      className="md:w-[230px] md:h-[430px] w-[157px] h-[310px] flex flex-col gap-2 overflow-hidden cursor-pointer bg-[#F4F4F5] dark:bg-[#27272A] border-none "
     >
       <CardContent className="p-0">
         <Image 
@@ -27,6 +27,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           width={250} 
           height={340} 
           priority 
+          className="md:w-[230px] md:h-[340px] w-[157px] h-[233px]"
         />
       </CardContent>
       <CardContent className="px-2 py-0 text-[18px] font-normal">⭐ {movie.vote_average}</CardContent>

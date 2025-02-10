@@ -99,7 +99,7 @@ const Page = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {movies.length > 0
           ? movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
-          : <p className="text-gray-500">No movies found</p>}
+          : <p className="text-gray-500">loading</p>}
       </div>
     </div>
   );

@@ -52,23 +52,23 @@ const MoviesList: React.FC<MoviesListProps> = ({ title, endpoint }) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="px-[5%] sm:px-[12%] flex flex-col gap-8 h-[980px] overflow-hidden">
-      <div className="w-full flex flex-row justify-between items-center">
-        <p className="text-2xl font-bold">{title}</p>
-        <p 
-          className="flex flex-row gap-2 cursor-pointer"
-          onClick={() => push(`/category/${endpoint}`)}
-        >
-          See more <ArrowRightIcon className="w-5" />
-        </p>
+    <div className="flex justify-center ">
+      <div className="max-w-[1280px] w-full px-[5%] 2xl:px-0 flex flex-col gap-8 h-[980px] overflow-hidden">
+        <div className="w-full flex flex-row justify-between items-center">
+          <p className="text-2xl font-bold">{title}</p>
+          <p 
+            className="flex flex-row gap-2 cursor-pointer"
+            onClick={() => push(`/category/${endpoint}`)}
+          >
+            See more <ArrowRightIcon className="w-5" />
+          </p>
+        </div>
+        <div className="w-full flex flex-wrap gap-x-[32px] gap-y-[32px] justify-center">
+          {movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
+        </div>
       </div>
-      <div className="w-full flex flex-wrap gap-x-[32px] gap-y-[32px] justify-start">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
-      
-
     </div>
   );
 };
