@@ -68,7 +68,7 @@ const MovieDetail = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  if (!movie) return <p>Кино олдсонгүй.</p>;
+  if (!movie) return <p>Not found.</p>;
 
   return (
     <div className="flex justify-center relative">

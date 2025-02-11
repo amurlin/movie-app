@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectLabel,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { Film, Search, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -20,11 +20,22 @@ import { MovieType } from "@/app/types/movie-type";
 import Image from "next/image";
 import { ArrowRightIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+import { Badge } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
 
 type GenreType = { id: number; name: string };
+type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 const Header = () => {
   const { setTheme, theme } = useTheme();
@@ -33,6 +44,10 @@ const Header = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [movies, setMovies] = useState<MovieType[]>([]);
+
+  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
+  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
+  const [showPanel, setShowPanel] = React.useState<Checked>(false)
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -82,7 +97,7 @@ const Header = () => {
             },
           }
         );
-        setMovies(response.data.results); // Хариуны үр дүнг хадгална
+        setMovies(response.data.results); 
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
@@ -93,9 +108,9 @@ const Header = () => {
   }, [searchValue]);
 
   return (
-    <div className="sticky top-0 w-screen h-[59px] flex items-center justify-items-center z-10 bg-white dark:bg-black">
-      <div className=" flex flex-col w-full gap-[1000px]  items-center">
-        <div className="relative max-w-[1280px] w-full px-[5%] 2xl:px-0 flex flex-row items-center justify-between">
+    <div className="sticky top-0 w-screen h-[59px] flex z-10 bg-white dark:bg-[#09090B]">
+      <div className="flex flex-col w-full justify-center items-center h-full gap-4">
+        <div className="max-w-[1280px] w-full px-[5%] 2xl:px-0 flex flex-row items-center justify-between">
           <div
             className="flex flex-row text-[#4338CA] gap-2 cursor-pointer"
             onClick={() => {
@@ -106,7 +121,7 @@ const Header = () => {
             <h4 className="italic font-bold">Movie Z</h4>
           </div>
           <div className="md:flex gap-3 hidden relative">
-            <Select onValueChange={handleGenreSelect} value={selectedGenre}>
+            {/* <Select onValueChange={handleGenreSelect} value={selectedGenre}>
               <SelectTrigger className="w-[97px] h-9 ">
                 <SelectValue placeholder="Genre" />
               </SelectTrigger>
@@ -120,7 +135,40 @@ const Header = () => {
                   ))}
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-9">Genre</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Genres</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {/* {genres.map((genre) => (
+                    <Badge key={genre.id} value={genre.id.toString()}>
+                      {genre.name}
+                    </Badge>
+                  ))} */}
+                <DropdownMenuCheckboxItem
+                  checked={showStatusBar}
+                  onCheckedChange={setShowStatusBar}
+                  className="round-full py-2 px-3"
+                >
+                  Status Bar
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={showActivityBar}
+                  onCheckedChange={setShowActivityBar}
+                >
+                  Activity Bar
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={showPanel}
+                  onCheckedChange={setShowPanel}
+                >
+                  Panel
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Input
               placeholder="Search"
               className="w-[379px] h-9"
@@ -155,12 +203,11 @@ const Header = () => {
           {/* {loading && <p>Loading ...</p>} */}
         </div>
         {movies.length > 0 && (
-          <div className="z-10 w-[530px] flex justify-center p-0 top-[59px]  bg-black ">
-            {/* onClick={() => {push("");}}> */}
+          <div className="w-[530px] flex justify-center p-0 bg-black ">
             <div className=" w-[530px] bg-white dark:bg-black p-6 shadow-lg mt-2 rounded-lg flex flex-col border-solid border-[1px] border-[#27272A]">
               {movies.slice(0, 5).map(
                 (
-                  movie: any // ehnii 5
+                  movie // ehnii 5
                 ) => (
                   <div key={movie.id} className="flex flex-col">
                     <div
@@ -174,7 +221,7 @@ const Header = () => {
                         height={100}
                         className="w-[80px] h-[110px] object-cover rounded-md"
                       />
-                      <div className="w-full flex flex-row justify-between h-[120px] relative">
+                      <div className="w-full flex flex-row justify-between h-[120px] relative"  >
                         {/* onClick={() => push(`/category/${endpoint}`)}> */}
                         <div>
                           <div className="flex flex-col gap-2">

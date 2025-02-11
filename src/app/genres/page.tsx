@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MovieType } from "../types/movie-type";
-import MovieCard from "@/components/MovieCard"; // MovieCard-ыг импортлож байна
+import MovieCard from "@/components/MovieCard"; 
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -73,8 +73,9 @@ const Page = () => {
   };
 
   return (
-    <div className="px-6 py-4 ">
-      <div className="flex flex-wrap gap-2 ">
+    <div className="flex justify-center"> 
+      <div className="max-w-[1280px] grid grid-cols-3 gap-2">
+      <div className="col-span-1 gap-7 ">
         {genres.length > 0 &&
           genres.map((item) => {
             const genreId = item.id.toString();
@@ -93,13 +94,19 @@ const Page = () => {
             );
           })}
       </div>
-
-      <Separator className="my-4" />
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      
+      <div className="flex flex-row gap-5 col-span-2">
+      <Separator orientation="vertical" />
+      <div className="flex flex-wrap gap-7">
         {movies.length > 0
-          ? movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          ? movies.map((movie) => 
+          <MovieCard 
+            // className={"`w-[165px] h-[244px]"} 
+            key={movie.id} 
+            movie={movie} />)
           : <p className="text-gray-500">loading</p>}
+      </div>
+      </div>
       </div>
     </div>
   );
