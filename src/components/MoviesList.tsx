@@ -5,17 +5,17 @@ import { useState, useEffect } from "react";
 import { ArrowRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MovieType } from "@/app/types/movie-type";
-import MovieCard from "./MovieCard"; // Шинэ MovieCard компонентыг импортолж байна
+import MovieCard from "./MovieCard";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
 
-interface MoviesListProps {
+type MoviesListProps = {
   title: string;
   endpoint: string;
 }
 
-const MoviesList: React.FC<MoviesListProps> = ({ title, endpoint }) => {
+const MoviesList = ({ title, endpoint }: MoviesListProps) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState<MovieType[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -74,38 +74,38 @@ const Page = () => {
 
   return (
     <div className="flex justify-center"> 
-      <div className="max-w-[1280px] grid grid-cols-3 gap-2">
-      <div className="col-span-1 gap-7 ">
-        {genres.length > 0 &&
-          genres.map((item) => {
-            const genreId = item.id.toString();
-            const isSelected = selectedGenreIds.includes(genreId);
-            return (
-              <Badge
-                onClick={handleGenreSelection(genreId)}
-                variant="outline"
-                key={item.id}
-                className={`cursor-pointer px-3 py-1 rounded-full ${
-                  isSelected ? "bg-black text-white dark:bg-white dark:text-black" : ""
-                }`}
-              >
-                {item.name}
-              </Badge>
-            );
-          })}
-      </div>
+      <div className="max-w-[1280px] sm:grid sm:grid-cols-3 gap-2">
+        <div className="row-span-1 sm:col-span-1 gap-7 ">
+          {genres.length > 0 &&
+            genres.map((item) => {
+              const genreId = item.id.toString();
+              const isSelected = selectedGenreIds.includes(genreId);
+              return (
+                <Badge
+                  onClick={handleGenreSelection(genreId)}
+                  variant="outline"
+                  key={item.id}
+                  className={`cursor-pointer px-3 py-1 rounded-full ${
+                    isSelected ? "bg-black text-white dark:bg-white dark:text-black" : ""
+                  }`}
+                >
+                  {item.name}
+                </Badge>
+              );
+            })}
+        </div>
       
-      <div className="flex flex-row gap-5 col-span-2">
-      <Separator orientation="vertical" />
-      <div className="flex flex-wrap gap-7">
-        {movies.length > 0
-          ? movies.map((movie) => 
-          <MovieCard 
-            // className={"`w-[165px] h-[244px]"} 
-            key={movie.id} 
-            movie={movie} />)
-          : <p className="text-gray-500">loading</p>}
-      </div>
+        <div className="flex  gap-5 row-span-2 sm:col-span-2">
+        <Separator orientation="vertical" />
+        <div className="flex flex-wrap gap-7">
+          {movies.length > 0
+            ? movies.map((movie) => 
+            <MovieCard 
+              // className={"`w-[165px] h-[244px]"} 
+              key={movie.id} 
+              movie={movie} />)
+            : <p className="text-gray-500">loading</p>}
+        </div>
       </div>
       </div>
     </div>

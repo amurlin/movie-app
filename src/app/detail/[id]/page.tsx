@@ -5,6 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { MovieType } from "@/app/types/movie-type";
+import { Button } from "@/components/ui/button";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -71,7 +72,7 @@ const MovieDetail = () => {
   if (!movie) return <p>Not found.</p>;
 
   return (
-    <div className="flex justify-center relative">
+    <div className="flex justify-center">
       <div className="flex flex-col w-[1280px]">
         <div className="flex justify-between">
           <div className="flex flex-col">
@@ -92,10 +93,12 @@ const MovieDetail = () => {
             src={`${TMDB_IMAGE_SERVICE_URL}/original${movie.backdrop_path}`}
             alt={movie.title}
             width={760}
-            height={430}/>
+            height={430}
+            className="relative"/>
+          <Button className="absolute bottom-0 left-0"></Button>
           
 
-          <div className="absolute hidden justify-items-center ">
+          <div className="hidden justify-items-center ">
             {trailer ? (
               <div className="">
                 <iframe

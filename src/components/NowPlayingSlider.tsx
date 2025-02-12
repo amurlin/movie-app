@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "./ui/button";
 import { Play } from "lucide-react";
-import { Link } from "lucide-react";
+//import { Link } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -30,7 +30,7 @@ const NowPlayingSlider = () => {
   const [nowPlayingData, setNowPlayingData] = useState<MovieType[]>([]);
   const { push } = useRouter();
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
-  const [trailer, setTrailer] = useState<string | null>(null);
+  //const [trailer, setTrailer] = useState<string | null>(null);
 
   const getNowPlayingMoviesData = async () => {
     setLoading(true);
@@ -47,23 +47,23 @@ const NowPlayingSlider = () => {
 
       setNowPlayingData(response.data.results);
 
-      // Трейлерийн мэдээллийг авах
-      const videoResponse = await axios.get(
-        `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${TMDB_API_TOKEN}`,
-          },
-        }
-      );
-      // Трейлерийг тогтоох
-      const trailerData = videoResponse.data.results.find(
-        (video: any) => video.type === "Trailer"
-      );
-      if (trailerData) {
-        setTrailer(trailerData.key);
-      }
+      // // Трейлерийн мэдээллийг авах
+      // const videoResponse = await axios.get(
+      //   `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
+      //   {
+      //     headers: {
+      //       Accept: "application/json",
+      //       Authorization: `Bearer ${TMDB_API_TOKEN}`,
+      //     },
+      //   }
+      // );
+      // // Трейлерийг тогтоох
+      // const trailerData = videoResponse.data.results.find(
+      //   (video: any) => video.type === "Trailer"
+      // );
+      // if (trailerData) {
+      //   setTrailer(trailerData.key);
+      // }
 
 
       setLoading(false);

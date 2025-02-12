@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 // import {
@@ -14,40 +15,44 @@ import { Input } from "@/components/ui/input";
 // } from "@/components/ui/select";
 import { Film, Search, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+import { useRouter,  } from "next/navigation"; //useSearchParams
+// import axios from "axios";
 import { MovieType } from "@/app/types/movie-type";
 import Image from "next/image";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  // DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Badge } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
 
 type GenreType = { id: number; name: string };
-type Checked = DropdownMenuCheckboxItemProps["checked"]
+// type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 const Header = () => {
   const { setTheme, theme } = useTheme();
   const { push } = useRouter();
   const [genres, setGenres] = useState<GenreType[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  // const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [movies, setMovies] = useState<MovieType[]>([]);
 
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
-  const [showPanel, setShowPanel] = React.useState<Checked>(false)
+  // const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
+  // const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
+  // const [showPanel, setShowPanel] = React.useState<Checked>(false)
+  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
+  //const searchParams = useSearchParams();
+  //const searchedGenreIds = searchParams.get("genreIds") || "";
+  
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -70,9 +75,16 @@ const Header = () => {
     fetchGenres();
   }, []);
 
-  const handleGenreSelect = (genreId: string) => {
-    setSelectedGenre(genreId);
-    push(`/genres?genreIds=${genreId}`);
+  const handleGenreSelection = (genreId: string) => () => {
+    const updatedGenres = selectedGenreIds.includes(genreId)
+      ? selectedGenreIds.filter((item) => item !== genreId)
+      : [...selectedGenreIds, genreId];
+
+    setSelectedGenreIds(updatedGenres);
+
+    const queryParams = new URLSearchParams();
+    queryParams.set("genreIds", updatedGenres.join(","));
+    push(`/genres?${queryParams.toString()}`);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +119,23 @@ const Header = () => {
     fetchMovies();
   }, [searchValue]);
 
+  // const getMoviesByGenres = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${TMDB_BASE_URL}/discover/movie?language=en&with_genres=${searchedGenreIds}&page=1`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${TMDB_API_TOKEN}`,
+  //         },
+  //       }
+  //     );
+  //     setMovies(response.data.results);
+  //   } catch (error) {
+  //     console.log("Axios error:", error);
+  //   }
+  // };
+
   return (
     <div className="sticky top-0 w-screen h-[59px] flex z-10 bg-white dark:bg-[#09090B]">
       <div className="flex flex-col w-full justify-center items-center h-full gap-4">
@@ -138,35 +167,34 @@ const Header = () => {
             </Select> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-9">Genre</Button>
+                <Button variant="outline" className="h-9">
+                  <ChevronDown />
+                  Genre
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Genres</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-[12px] font-normal">See lists of movies by genre</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {/* {genres.map((genre) => (
-                    <Badge key={genre.id} value={genre.id.toString()}>
-                      {genre.name}
-                    </Badge>
-                  ))} */}
-                <DropdownMenuCheckboxItem
-                  checked={showStatusBar}
-                  onCheckedChange={setShowStatusBar}
-                  className="round-full py-2 px-3"
-                >
-                  Status Bar
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={showActivityBar}
-                  onCheckedChange={setShowActivityBar}
-                >
-                  Activity Bar
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={showPanel}
-                  onCheckedChange={setShowPanel}
-                >
-                  Panel
-                </DropdownMenuCheckboxItem>
+                <div className="col-span-1 gap-7 ">
+                  {genres.length > 0 &&
+                    genres.map((item) => {
+                      const genreId = item.id.toString();
+                      const isSelected = selectedGenreIds.includes(genreId);
+                      return (
+                        <Badge
+                          onClick={handleGenreSelection(genreId)}
+                          variant="outline"
+                          key={item.id}
+                          className={`cursor-pointer px-3 py-1 rounded-full ${
+                            isSelected ? "bg-black text-white dark:bg-white dark:text-black" : ""
+                          }`}
+                        >
+                          {item.name}
+                        </Badge>
+                      );
+                    })}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
             <Input
