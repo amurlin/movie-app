@@ -47,7 +47,7 @@ const NowPlayingSlider = () => {
 
       setNowPlayingData(response.data.results);
 
-      // // Трейлерийн мэдээллийг авах
+      // // Trailer 
       // const videoResponse = await axios.get(
       //   `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
       //   {
@@ -57,7 +57,7 @@ const NowPlayingSlider = () => {
       //     },
       //   }
       // );
-      // // Трейлерийг тогтоох
+      //
       // const trailerData = videoResponse.data.results.find(
       //   (video: any) => video.type === "Trailer"
       // );

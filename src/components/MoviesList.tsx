@@ -27,6 +27,7 @@ const MoviesList = ({ title, endpoint }: MoviesListProps) => {
       try {
         const response = await axios.get(
           `${TMDB_BASE_URL}/movie/${endpoint}?language=en-US&page=1`,
+          // /movie/${id}/similar?language=en-US&page=1
           {
             headers: {
               Accept: "application/json",

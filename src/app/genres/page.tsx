@@ -101,7 +101,6 @@ const Page = () => {
           {movies.length > 0
             ? movies.map((movie) => 
             <MovieCard 
-              // className={"`w-[165px] h-[244px]"} 
               key={movie.id} 
               movie={movie} />)
             : <p className="text-gray-500">loading</p>}
