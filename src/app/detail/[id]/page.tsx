@@ -11,7 +11,7 @@ import MovieCard from "@/components/MovieCard";
 import DetailSkeleton from "@/components/skeleton/DetailSkeleton";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, Play } from "lucide-react";
 
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 const TMDB_API_TOKEN = process.env.TMDB_API_TOKEN;
@@ -24,6 +24,7 @@ const MovieDetail = () => {
   const [error, setError] = useState<string>(""); 
   const [loading, setLoading] = useState<boolean>(false); 
   const [trailer, setTrailer] = useState<boolean | null>(null);
+  const [showTrailer, setShowTrailer] = useState<boolean>(false); 
   const [similarMovies, setSimilarMovies] = useState<MovieType[]>([]); 
   const [credits, setCredits] = useState<string>(""); 
 
@@ -131,17 +132,23 @@ const MovieDetail = () => {
             <p className="mt-6 flex xl:hidden">{movie.overview}</p>
           </div>
 
-          <Image 
-            src={`${TMDB_IMAGE_SERVICE_URL}/original${movie.backdrop_path}`}
-            alt={movie.title}
-            width={760}
-            height={430}
-            className="relative w-full xl:w-[760px]"/>
-          <Button className="absolute bottom-0 left-0"></Button>
+          <div className="relative w-full xl:w-[760px]">
+            <Image 
+              src={`${TMDB_IMAGE_SERVICE_URL}/original${movie.backdrop_path}`}
+              alt={movie.title}
+              width={760}
+              height={430}
+              className="relative w-full xl:w-[760px]"/>
+            <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 flex flex-row items-center gap-3"
+              onClick={() => setShowTrailer(true)}>
+              <Button className="w-10 h-10 rounded-full"> <Play/> </Button>
+              <p>Play Trailer</p>
+            </div>
+          </div>
 
-          <div className="hidden justify-items-center ">
-            {trailer ? (
-              <div className="">
+          {/* Conditionally render the trailer */}
+            {showTrailer && trailer ? (
+              <div className="absolute top-0 left-0 w-full h-full border-box bg-black bg-opacity-50 flex justify-center items-center">
                 <iframe
                   width={760}
                   height={430}
@@ -150,11 +157,15 @@ const MovieDetail = () => {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
+                {/* Optional: Close button to hide trailer */}
+                <Button
+                  className="absolute top-3 right-3 text-white"
+                  onClick={() => setShowTrailer(false)} // Hide trailer
+                >
+                  Close
+                </Button>
               </div>
-            ) : (
-              <p>Trailer Not Found</p>
-            )}
-          </div>
+            ) : null}
         </div>
 
         <p className="mt-6 hidden xl:flex">{movie.overview}</p>

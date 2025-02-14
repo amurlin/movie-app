@@ -29,6 +29,7 @@ type GenreType = { id: number; name: string };
 const Header = () => {
   const { setTheme, theme } = useTheme();
   const { push } = useRouter();
+  const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<GenreType[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [movies, setMovies] = useState<MovieType[]>([]);
@@ -45,6 +46,7 @@ const Header = () => {
       });
       setGenres(response.data.genres);
       
+      
     } catch (error) {
       console.log("Axios error:", error);
     }
@@ -60,6 +62,7 @@ const Header = () => {
       : [...selectedGenreIds, genreId];
 
     setSelectedGenreIds(updatedGenres);
+    
 
     const queryParams = new URLSearchParams();
     queryParams.set("genreIds", updatedGenres.join(","));
@@ -79,7 +82,7 @@ const Header = () => {
         return;
       }
 
-      //setLoading(true);
+      setLoading(true);
       try {
         const response = await axios.get(
           `${TMDB_BASE_URL}/search/movie?query=${searchValue}&language=en-US&page=1`,
@@ -94,13 +97,13 @@ const Header = () => {
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
-      //setLoading(false);
+      setLoading(false);
     };
 
     fetchMovies();
   }, [searchValue]);
 
-  
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
@@ -132,7 +135,7 @@ const Header = () => {
                     See lists of movies by genre
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <div className="flex flex-wrap gap-7 ">
+                  <div className="row-span-1 sm:col-span-1 gap-7 ">
                     {genres.length > 0 &&
                       genres.map((item) => {
                         const genreId = item.id.toString();
@@ -140,12 +143,10 @@ const Header = () => {
                         return (
                           <Badge
                             onClick={handleGenreSelection(genreId)}
-                            // variant={"outline"}
+                            // variant="outline"
                             key={item.id}
                             className={`cursor-pointer px-3 py-1 rounded-full ${
-                              isSelected
-                                ? "bg-black text-white dark:bg-white dark:text-black"
-                                : ""
+                              isSelected ? "bg-black text-white dark:bg-white dark:text-black" : ""
                             }`}
                           >
                             {item.name}
@@ -185,8 +186,6 @@ const Header = () => {
               )}
             </div>
 
-            {/* search */}
-            {/* {loading && <p>Loading ...</p>} */}
           </div>
         </div>
       </div>

@@ -25,12 +25,13 @@ const TMDB_IMAGE_SERVICE_URL = process.env.TMDB_IMAGE_SERVICE_URL;
 
 const NowPlayingSlider = () => {
   const { id } = useParams(); // URL-с movieId-г авна
+  const { push } = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [nowPlayingData, setNowPlayingData] = useState<MovieType[]>([]);
-  const { push } = useRouter();
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
-  //const [trailer, setTrailer] = useState<string | null>(null);
+  const [trailer, setTrailer] = useState<boolean | null>(null);
+  const [showTrailer, setShowTrailer] = useState<boolean>(false);
 
   const getNowPlayingMoviesData = async () => {
     setLoading(true);
@@ -44,26 +45,24 @@ const NowPlayingSlider = () => {
           },
         }
       );
-
       setNowPlayingData(response.data.results);
 
-      // // Trailer 
-      // const videoResponse = await axios.get(
-      //   `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
-      //   {
-      //     headers: {
-      //       Accept: "application/json",
-      //       Authorization: `Bearer ${TMDB_API_TOKEN}`,
-      //     },
-      //   }
-      // );
-      //
-      // const trailerData = videoResponse.data.results.find(
-      //   (video: any) => video.type === "Trailer"
-      // );
-      // if (trailerData) {
-      //   setTrailer(trailerData.key);
-      // }
+       // Fetch Trailer
+      const videoResponse = await axios.get(
+        `${TMDB_BASE_URL}/movie/${id}/videos?language=en-US`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${TMDB_API_TOKEN}`,
+          },
+        }
+      );
+      const trailerData = videoResponse.data.results.find(
+        (video: any) => video.type === "Trailer"
+      );
+      if (trailerData) {
+        setTrailer(trailerData.key);
+      }
 
 
       setLoading(false);
@@ -85,7 +84,7 @@ const NowPlayingSlider = () => {
 
   const truncate = (input: string) =>
     input?.length > 200 ? `${input.substring(0, 180)}...` : input;
-
+ 
   return (
     <Carousel
       plugins={[plugin.current]}
@@ -137,11 +136,35 @@ const NowPlayingSlider = () => {
                   <p className=" text-sm">
                     {truncate(movie.overview)}
                   </p>
-                  <Button className="h-9 bg-white dark:bg-[#27272A] text-[#18181B] dark:text-white"> 
+                  <Button 
+                    className="h-9 bg-white dark:bg-[#27272A] text-[#18181B] dark:text-white"
+                    onClick={() => setShowTrailer(true)}> 
                     <Play/> 
                     Watch trailer 
                   </Button>
                 </div>
+
+                {/* Conditionally render the trailer */}
+                {showTrailer && trailer ? (
+                              <div className="absolute top-0 left-0 w-full h-full border-box bg-black bg-opacity-50 flex justify-center items-center">
+                                <iframe
+                                  width={760}
+                                  height={430}
+                                  src={`https://www.youtube.com/embed/${trailer}`}
+                                  title="Movie Trailer"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                ></iframe>
+                                {/* Optional: Close button to hide trailer */}
+                                <Button
+                                  className="absolute top-3 right-3 text-white"
+                                  onClick={() => setShowTrailer(false)} // Hide trailer
+                                >
+                                  Close
+                                </Button>
+                              </div>
+                            ) : null}
+
                 <div className="flex md:hidden flex-row justify-between items-start gap-1 px-[5%]">
                   <div className="flex flex-col gap-3 items-start w-[300px]">
                     <h3 className="p-0 text-md">Now playing:</h3>

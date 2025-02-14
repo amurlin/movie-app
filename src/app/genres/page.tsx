@@ -96,16 +96,16 @@ const Page = () => {
         </div>
       
         <div className="flex  gap-5 row-span-2 sm:col-span-2">
-        <Separator orientation="vertical" />
-        <div className="flex flex-wrap gap-7">
-          {movies.length > 0
-            ? movies.map((movie) => 
-            <MovieCard 
-              key={movie.id} 
-              movie={movie} />)
-            : <p className="text-gray-500">loading</p>}
+          <Separator orientation="vertical" />
+          <div className="flex flex-wrap gap-7">
+            {movies.length > 0
+              ? movies.map((movie) => 
+              <MovieCard 
+                key={movie.id} 
+                movie={movie} />)
+              : <p className="text-gray-500">loading</p>}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
